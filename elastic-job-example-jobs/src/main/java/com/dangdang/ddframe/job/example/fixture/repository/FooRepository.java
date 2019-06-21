@@ -20,7 +20,9 @@ package com.dangdang.ddframe.job.example.fixture.repository;
 import com.dangdang.ddframe.job.example.fixture.entity.Foo;
 import org.springframework.stereotype.Repository;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,9 +37,9 @@ public class FooRepository {
     }
     
     private void init() {
-        addData(0L, 100L, "Beijing");
-        addData(100L, 200L, "Shanghai");
-        addData(200L, 300L, "Guangzhou");
+        addData(0L, 10L, "Beijing");
+        addData(10L, 20L, "Shanghai");
+        addData(20L, 30L, "Guangzhou");
     }
     
     private void addData(final long idFrom, final long idTo, final String location) {
@@ -47,6 +49,7 @@ public class FooRepository {
     }
     
     public List<Foo> findTodoData(final String location, final int limit) {
+        System.out.println("ShardingParameter,"+ location);
         List<Foo> result = new ArrayList<>(limit);
         int count = 0;
         for (Map.Entry<Long, Foo> each : data.entrySet()) {
@@ -55,14 +58,17 @@ public class FooRepository {
                 result.add(foo);
                 count++;
                 if (count == limit) {
+                    System.out.println("count==limit,"+ (count == limit));
                     break;
                 }
             }
         }
+        System.out.println("count,"+ count);
         return result;
     }
     
     public void setCompleted(final long id) {
+        System.out.println(String.format("Time: %s | Thread: %s | %s", new SimpleDateFormat("HH:mm:ss").format(new Date()), Thread.currentThread().getId(), "DATAFLOW PROCESS.setCompleted"));
         data.get(id).setStatus(Foo.Status.COMPLETED);
     }
 }

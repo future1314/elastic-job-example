@@ -30,10 +30,11 @@ import java.util.List;
 public class SpringDataflowJob implements DataflowJob<Foo> {
     
     @Resource
-    private FooRepository fooRepository;
+    private FooRepository fooRepository;//自动注入失败？？？
     
     @Override
     public List<Foo> fetchData(final ShardingContext shardingContext) {
+        System.out.println("fooRepository,"+fooRepository);
         System.out.println(String.format("Item: %s | Time: %s | Thread: %s | %s",
                 shardingContext.getShardingItem(), new SimpleDateFormat("HH:mm:ss").format(new Date()), Thread.currentThread().getId(), "DATAFLOW FETCH"));
         return fooRepository.findTodoData(shardingContext.getShardingParameter(), 10);

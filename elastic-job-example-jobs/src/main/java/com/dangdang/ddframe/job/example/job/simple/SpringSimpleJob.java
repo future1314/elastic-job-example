@@ -30,7 +30,7 @@ import java.util.List;
 public class SpringSimpleJob implements SimpleJob {
     
     @Resource
-    private FooRepository fooRepository;
+    private FooRepository fooRepository;//自动注入
     
     @Override
     public void execute(final ShardingContext shardingContext) {
